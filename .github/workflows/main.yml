@@ -25,3 +25,13 @@ jobs:
           EXECUTOR_IMAGE: jeffreycai/musketeers
           VAULT_PASSWORD: Interview_01!
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Build app docker image and push to DockerHub
+        run: make test
