@@ -39,7 +39,7 @@ cli: dotenv
 
 ## actual build jobs
 _build: dotenv
-	echo "IN"
+	docker build -t $(APP_NAME):$(BUILD_ID) .
 .PHONY: build
 
 _deploy: dotenv
