@@ -46,7 +46,7 @@ cli: dotenv
 
 
 ## actual build jobs
-_build: dotcreds
+_build:
 	docker build -t $(APP_NAME):$(BUILD_ID) .
 	@docker login --username $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_ACCESS_TOKEN)
 	docker tag $(APP_NAME):$(BUILD_ID) $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
@@ -76,7 +76,7 @@ else
 endif
 ifdef CI
 	@mkdir -p ~/.docker
-	@echo '${DOCKER_AUTH_CONFIG}' > ~/.docker/config.json
+	@echo '${VAULT_PASSWORD}' >> .env
 	env >> .env
 endif
 

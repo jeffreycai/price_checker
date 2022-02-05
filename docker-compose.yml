@@ -24,7 +24,6 @@ services:
     environment:
       DOCKER_TLS_CERTDIR: "/certs"
       DOCKER_HOST: tcp://docker:2375
-      DOCKER_AUTH_CONFIG: "{\"credsStore\": \"ecr-login\"}"
     env_file: .env
     working_dir: /opt/app
     volumes:
