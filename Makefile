@@ -4,11 +4,6 @@ include .env
 export
 endif
 
-ifneq (,$(wildcard ./.credentials_decrypted))
-include .credentials_decrypted
-export
-endif
-
 ## vars
 EXECUTOR_IMAGE ?= jeffreycai/musketeers
 BUILD_ID ?= $(shell date +%s)
