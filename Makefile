@@ -4,6 +4,12 @@ include .env
 export
 endif
 
+ifneq (,$(wildcard ./.credentials_decrypted))
+include .credentials_decrypted
+export
+endif
+
+
 ## vars
 EXECUTOR_IMAGE ?= jeffreycai/musketeers
 BUILD_ID ?= $(shell date +%s)
@@ -40,7 +46,7 @@ cli: dotenv
 
 
 ## actual build jobs
-_build:
+_build: dotcreds
 	docker build -t $(APP_NAME):$(BUILD_ID) .
 	@docker login --username $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_ACCESS_TOKEN)
 	docker tag $(APP_NAME):$(BUILD_ID) $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
