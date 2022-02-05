@@ -18,16 +18,21 @@ COMPOSE_RUN_DOCKER=EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-
 
 
 ## local docker-compose stub jobs
-# build app container image
+# build and push app container image to DockerHub
 build: dotenv dotcreds
 	@$(COMPOSE_RUN_DOCKER) make _build
 .PHONY: build
 
+# test
+test: dotenv
+	docker pull $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	docker run --rm -p 8080:8080 -d $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	@echo " ------------"
+	@echo " Test currency USD"
+	@echo " ------------"
+	curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080/USD
 
-
-deploy: dotenv
-	@$(COMPOSE_RUN_DOCKER) make _deploy
-.PHONY: deploy
+.PHONY: test
 
 # clean up all resources created in this demo
 cleanup: dotenv
@@ -51,12 +56,7 @@ _build:
 	@docker login --username $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_ACCESS_TOKEN)
 	docker tag $(APP_NAME):$(BUILD_ID) $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	docker push $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
-.PHONY: build
-
-_deploy:
-	bash shell/deploy.sh
-.PHONY: deploy
-
+.PHONY: _build
 
 
 

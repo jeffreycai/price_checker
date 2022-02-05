@@ -4,4 +4,6 @@ RUN mkdir -p /opt/app
 COPY . /opt/app
 WORKDIR /opt/app/app
 
-ENTRYPOINT ['/usr/local/bin/python', 'main.py']
+EXPOSE 8080
+
+ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/python main.py"]
