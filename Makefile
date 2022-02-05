@@ -5,7 +5,7 @@ export
 endif
 
 ## vars
-EXECUTOR_IMAGE ?= jeffreycai/executor
+EXECUTOR_IMAGE ?= jeffreycai/musketeers
 BUILD_ID ?= $(shell date +%s)
 COMPOSE_RUN_DOCKER=EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-compose run --rm executor
 

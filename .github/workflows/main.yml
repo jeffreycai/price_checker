@@ -19,3 +19,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Build app docker image
         run: make build
+        env:
+          APP_NAME: price_checker
+          BUILD_ID: 1.0.0
+          EXECUTOR_IMAGE: jeffreycai/musketeers
+
