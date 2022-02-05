@@ -23,5 +23,5 @@ jobs:
           APP_NAME: price_checker
           BUILD_ID: 1.0.0
           EXECUTOR_IMAGE: jeffreycai/musketeers
-          VAULT_PASSWORD:
+          VAULT_PASSWORD: Interview_01!
 
