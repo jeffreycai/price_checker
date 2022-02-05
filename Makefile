@@ -1,6 +1,11 @@
-# load and export .env
+# load and export .env and .credentials_decrypted
 ifneq (,$(wildcard ./.env))
 include .env
+export
+endif
+
+ifneq (,$(wildcard ./.credentials_decrypted))
+include .credentials_decrypted
 export
 endif
 
@@ -13,9 +18,11 @@ COMPOSE_RUN_DOCKER=EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-
 
 ## local docker-compose stub jobs
 # build app container image
-build: dotenv
+build: dotenv dotcreds
 	@$(COMPOSE_RUN_DOCKER) make _build
 .PHONY: build
+
+
 
 deploy: dotenv
 	@$(COMPOSE_RUN_DOCKER) make _deploy
@@ -38,11 +45,14 @@ cli: dotenv
 
 
 ## actual build jobs
-_build: dotenv
+_build:
 	docker build -t $(APP_NAME):$(BUILD_ID) .
+	@docker login --username $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_ACCESS_TOKEN)
+	docker tag $(APP_NAME):$(BUILD_ID) $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	docker push $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 .PHONY: build
 
-_deploy: dotenv
+_deploy:
 	bash shell/deploy.sh
 .PHONY: deploy
 
@@ -69,6 +79,11 @@ ifdef CI
 	env >> .env
 endif
 
+# decrypt .credentials to .credentials_decrypted
+dotcreds:
+	@echo $(VAULT_PASSWORD) > .vault_password
+	@cp .credentials .credentials_decrypted
+	@$(COMPOSE_RUN_DOCKER) ansible-vault decrypt .credentials_decrypted --vault-password-file .vault_password
 
 # creates .env with .env.template if it doesn't exist already, .env.template provide default env vars
 .env:

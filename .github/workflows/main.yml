@@ -18,7 +18,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Build app docker image
-        run: make build
+        run: make build_and_push
         env:
           APP_NAME: price_checker
           BUILD_ID: 1.0.0
