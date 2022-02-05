@@ -1,4 +1,4 @@
-FROM python:slim-bullseye
+FROM python
 
 RUN mkdir -p /opt/app
 COPY . /opt/app

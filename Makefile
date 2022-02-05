@@ -26,10 +26,11 @@ build: dotenv dotcreds
 # test
 test: dotenv
 	docker pull $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
-	docker run --rm -p 8080:8080 -d $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	docker run --rm -d -p 8080:8080 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	@echo " ------------"
 	@echo " Test currency USD"
 	@echo " ------------"
+	sleep 10
 	curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080/USD
 
 .PHONY: test

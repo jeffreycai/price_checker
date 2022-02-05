@@ -5,7 +5,7 @@ from webserver import WebServer
 import time
 
 # Global vars
-hostName = "localhost"
+hostName = ""
 serverPort = 8080
 
 # main()
