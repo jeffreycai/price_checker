@@ -1,0 +1,39 @@
+version: '3.7'
+
+
+services:
+  docker:
+    image: docker:18-dind
+    container_name: docker-18-dind
+    privileged: true
+    expose:
+        - 2375
+        - 2376
+    volumes:
+      - dind-certs-ca:/certs/ca
+      - dind-certs-client:/certs/client
+
+
+  executor:
+    image: ${EXECUTOR_IMAGE}
+    container_name: executor-${BUILD_ID}
+    depends_on:
+      - docker
+    links:
+      - docker
+    environment:
+      DOCKER_TLS_CERTDIR: "/certs"
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_AUTH_CONFIG: "{\"credsStore\": \"ecr-login\"}"
+    env_file: .env
+    working_dir: /opt/app
+    volumes:
+      - .:/opt/app
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.aws:/root/.aws:ro
+      - dind-certs-client:/certs/client:ro
+
+
+volumes:
+  dind-certs-ca:
+  dind-certs-client:
