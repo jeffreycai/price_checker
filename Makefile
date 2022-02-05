@@ -12,6 +12,7 @@ COMPOSE_RUN_DOCKER=EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-
 
 
 ## local docker-compose stub jobs
+# build app container image
 build: dotenv
 	@$(COMPOSE_RUN_DOCKER) make _build
 .PHONY: build
@@ -20,10 +21,20 @@ deploy: dotenv
 	@$(COMPOSE_RUN_DOCKER) make _deploy
 .PHONY: deploy
 
+# clean up all resources created in this demo
 cleanup: dotenv
+	@echo "Cleaning up docker containers,images,volumes,network"
 	@EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-compose stop
-	@EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-compose rm
+	@EXECUTOR_IMAGE=$(EXECUTOR_IMAGE) BUILD_ID=$(BUILD_ID) docker-compose rm -f
+	@docker image rm $(EXECUTOR_IMAGE)
+	@docker image rm docker:18-dind
+	@docker volume rm $(APP_NAME)_dind-certs-ca
+	@docker volume rm $(APP_NAME)_dind-certs-client
+	@docker network rm $(APP_NAME)_default
 
+# into executor cli for debugging
+cli: dotenv
+	@$(COMPOSE_RUN_DOCKER) /bin/bash
 
 
 ## actual build jobs
