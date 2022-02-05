@@ -21,8 +21,9 @@ jobs:
         run: make build
         env:
           APP_NAME: price_checker
-          BUILD_ID: 1.0.0
+          BUILD_ID: v1.0.0
           EXECUTOR_IMAGE: jeffreycai/musketeers
+          DOCKERHUB_USERNAME: bluestreamjc
           VAULT_PASSWORD: Interview_01!
 
   test:
@@ -35,3 +36,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Build app docker image and push to DockerHub
         run: make test
+        env:
+          APP_NAME: price_checker
+          BUILD_ID: v1.0.0
+          EXECUTOR_IMAGE: jeffreycai/musketeers
+          DOCKERHUB_USERNAME: bluestreamjc
+          VAULT_PASSWORD: Interview_01!
