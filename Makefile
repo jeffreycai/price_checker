@@ -23,18 +23,34 @@ build: dotenv dotcreds
 	@$(COMPOSE_RUN_DOCKER) make _build
 .PHONY: build
 
-# test
-test: dotenv
+# run the app locally
+run: dotenv
 	docker pull $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	docker rm -f $(APP_NAME) &> /dev/null
 	docker run --rm --name $(APP_NAME) -d -p 8080:8080 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	@echo "Wait for server to start"
-	@sleep 5
+	sleep 5
+	@echo "Server started"
+	@echo " - http://localhost:8080/"
+	@echo " - http://localhost:8080/JPY"
+	@echo " - http://localhost:8080/NILL"
+	@echo " - http://localhost:8080/health"
+.PHONY: run
+
+# stop the app locally
+stop:
+	@echo "Stop server"
+	docker stop $(APP_NAME)
+.PHONY: stop
+
+# test
+test: dotenv
+	@$(MAKE) run
 
 	@echo "** Start Testing **"
 
-	@echo " - Wrong Currency Code should return 400 - 'http://localhost:8080/WRONG'"
-	@bash tests/http_response_check.sh WRONG 400
+	@echo " - Wrong Currency Code should return 400 - 'http://localhost:8080/NILL'"
+	@bash tests/http_response_check.sh NILL 400
 
 	@echo " - Health check endpoint should return 200 - 'http://localhost:8080/health'"
 	@bash tests/http_response_check.sh health 200
@@ -52,7 +68,8 @@ test: dotenv
 	@bash tests/http_response_check.sh JPY 200
 
 	@echo "** End Testing **"
-	docker stop $(APP_NAME)
+
+	@$(MAKE) stop
 .PHONY: test
 
 # clean up all resources created in this demo
