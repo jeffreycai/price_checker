@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Slack Notification
+      - name: Slack to notify start
         uses: bryannice/gitactions-slack-notification@2.0.0
         env:
           SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
@@ -40,11 +40,12 @@ jobs:
           DOCKERHUB_USERNAME: bluestreamjc
           VAULT_PASSWORD: Interview_01!
 
-      - name: Slack Notification
+      - name: Slack to notify end
         uses: bryannice/gitactions-slack-notification@2.0.0
         env:
           SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
           SLACK_MESSAGE: '''Build'' stage ended.'
+          # TODO: Some issue with the env.WORKFLOW_CONCLUSION reference below, need to fix
           SLACK_TITLE: 'Build stage has ended with ${{ env.WORKFLOW_CONCLUSION }}'
 
 
@@ -55,6 +56,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Slack to notify start
+        uses: bryannice/gitactions-slack-notification@2.0.0
+        env:
+          SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
+          SLACK_MESSAGE: 'Workflow triggered. ''Test'' stage started.'
+          SLACK_TITLE: 'Test stage has started'
+
       - name: Build app docker image and push to DockerHub
         run: make test
         env:
@@ -63,3 +71,11 @@ jobs:
           EXECUTOR_IMAGE: jeffreycai/musketeers
           DOCKERHUB_USERNAME: bluestreamjc
           VAULT_PASSWORD: ${{ secrets.VAULT_PASSWORD }}
+
+      - name: Slack to notify end
+        uses: bryannice/gitactions-slack-notification@2.0.0
+        env:
+          SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
+          SLACK_MESSAGE: '''Test'' stage ended.'
+          # TODO: Some issue with the env.WORKFLOW_CONCLUSION reference below, need to fix
+          SLACK_TITLE: 'Test stage has ended with ${{ env.WORKFLOW_CONCLUSION }}'
