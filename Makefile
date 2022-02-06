@@ -26,13 +26,33 @@ build: dotenv dotcreds
 # test
 test: dotenv
 	docker pull $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
-	docker run --rm -d -p 8080:8080 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
-	@echo " ------------"
-	@echo " Test currency USD"
-	@echo " ------------"
-	sleep 10
-	curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080/USD
+	docker rm -f $(APP_NAME) &> /dev/null
+	docker run --rm --name $(APP_NAME) -d -p 8080:8080 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	@echo "Wait for server to start"
+	@sleep 5
 
+	@echo "** Start Testing **"
+
+	@echo " - Wrong Currency Code should return 400 - 'http://localhost:8080/WRONG'"
+	@bash tests/http_response_check.sh WRONG 400
+
+	@echo " - Health check endpoint should return 200 - 'http://localhost:8080/health'"
+	@bash tests/http_response_check.sh health 200
+
+	@echo " - Test currency USD"
+	@bash tests/http_response_check.sh USD 200
+
+	@echo " - Test currency EUR"
+	@bash tests/http_response_check.sh EUR 200
+
+	@echo " - Test currency GBP"
+	@bash tests/http_response_check.sh GBP 200
+
+	@echo " - Test currency JPY"
+	@bash tests/http_response_check.sh JPY 200
+
+	@echo "** End Testing **"
+	docker stop $(APP_NAME)
 .PHONY: test
 
 # clean up all resources created in this demo
