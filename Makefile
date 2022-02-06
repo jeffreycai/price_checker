@@ -44,7 +44,7 @@ stop:
 .PHONY: stop
 
 # test
-test: dotenv
+test:
 	@$(MAKE) run
 
 	@echo "** Start Testing **"
