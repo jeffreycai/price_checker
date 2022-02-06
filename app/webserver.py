@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 from controller import Controller
+from promeserver import PromeServer
 
 '''
 WebServer Class to handle http requests
@@ -8,6 +9,7 @@ class WebServer(BaseHTTPRequestHandler):
     '''
     Parse Get query
     '''
+    @PromeServer.REQUEST_TIME.time()
     def do_GET(self):
         path = self.path
         controller = Controller(self)
@@ -35,9 +37,9 @@ class WebServer(BaseHTTPRequestHandler):
         elif path == '/favicon.ico':
             controller.send_text('')
 
-        # /metrics
-        elif path == '/metrics':
-            report_metrics()
+#        # /metrics
+#        elif path == '/metrics':
+#            report_metrics()
 
         # /<currency>
         else:

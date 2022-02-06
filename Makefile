@@ -27,7 +27,7 @@ build: dotenv dotcreds
 run: dotenv
 	docker pull $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	docker rm -f $(APP_NAME) &> /dev/null
-	docker run --rm --name $(APP_NAME) -d -p 8080:8080 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
+	docker run --rm --name $(APP_NAME) -d -p 8080:8080 -p 8000:8000 $(DOCKERHUB_USERNAME)/$(APP_NAME):$(BUILD_ID)
 	@echo "Wait for server to start"
 	sleep 5
 	@echo "Server started"
@@ -35,6 +35,7 @@ run: dotenv
 	@echo " - http://localhost:8080/JPY"
 	@echo " - http://localhost:8080/NILL"
 	@echo " - http://localhost:8080/health"
+	@echo " - http://localhost:8000/" # metrics
 .PHONY: run
 
 # stop the app locally

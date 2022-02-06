@@ -1,3 +1,4 @@
 .env
 .valut_password
 .credentials_decrypted
+__pycache__
