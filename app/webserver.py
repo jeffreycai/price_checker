@@ -37,9 +37,9 @@ class WebServer(BaseHTTPRequestHandler):
         elif path == '/favicon.ico':
             controller.send_text('')
 
-#        # /metrics
-#        elif path == '/metrics':
-#            report_metrics()
+        # /metrics
+        elif path == '/metrics':
+            controller.send_text('<p>Not yet implemented with <pre>/metrics</pre> <br />But avaiable at port 8000 <pre>http://HOST:8000</pre> </p>')
 
         # /<currency>
         else:
