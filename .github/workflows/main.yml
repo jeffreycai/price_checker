@@ -48,4 +48,19 @@ jobs:
           BUILD_ID: v1.0.0
           EXECUTOR_IMAGE: jeffreycai/musketeers
           DOCKERHUB_USERNAME: bluestreamjc
-          VAULT_PASSWORD: Interview_01!
+          VAULT_PASSWORD: ${{ secrets.VAULT_PASSWORD }}
+
+on: push
+name: Slack Notification Demo
+jobs:
+    slackNotification:
+      name: Slack Notification Demo
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@master
+      - name: Slack Notification Demo
+        uses: bryannice/gitactions-slack-notification@2.0.0
+        env:
+          SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
+          SLACK_MESSAGE: 'Demo''ing the Slack Notification'
+          SLACK_TITLE: 'Slack Notification Demo'
