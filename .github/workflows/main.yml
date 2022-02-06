@@ -45,7 +45,7 @@ jobs:
         env:
           SLACK_INCOMING_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
           SLACK_MESSAGE: '''Build'' stage ended.'
-          SLACK_TITLE: 'Build stage has ended with ' + env.WORKFLOW_CONCLUSION
+          SLACK_TITLE: 'Build stage has ended with ${{ env.WORKFLOW_CONCLUSION }}'
 
 
   test:
